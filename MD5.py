@@ -5,33 +5,28 @@ from math import sin
 
 def Md5(buffer):
 	bits = PaddTo512(BitVector(textstring = buffer))
-	print(8)
 	a0 = 0x67452301
 	b0 = 0xefcdab89
 	c0 = 0x98badcfe
 	d0 = 0x10325476
 	constants = [int(4294967296 * abs(sin(i + 1))) for i in range(64)]
 	shifts = [ 7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21]
-	print(15)
 	for block in range(0, (bits.length() // 512)):
 		A = a0
 		B = b0
 		C = c0
 		D = d0
 		M = []
-		print(24)
 		for i in range(0, 16):
 			M.append(0)
 			for j in range(0,32):
 				M[i] = (M[i]<<1) | (bits[block*512 + i*32+j]<<(block*512 + i*32+j))
-		print(28)
 		for i in range(0 ,64):
 			F = 0
 			g = 0
 			if 0 <= i <= 15:
 				F = (B &C) | ((~B) & D)
 				g = i
-			print(35)
 			if 16 <= i <= 31:
 				F = (D & B) | ((~D) | C)
 				g = (5 * i + 1) % 16
@@ -67,9 +62,3 @@ def PaddTo512(buffer):
 
 def shift(num, val):
 	return (num << val) | (num >> (32-val))
-
-k = Md5("kupa")
-print(k)
-m = hashlib.new("md5")
-m.update("kupa".encode('ascii'))
-print(m.hexdigest())

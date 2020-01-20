@@ -1,4 +1,5 @@
 import importlib
+import hashlib
 from BitVector import BitVector
 from math import sin
 
@@ -59,6 +60,10 @@ def Md5(buffer):
 		C = (C + temporary[2]) % (2 ** 32)
 		D = (D + temporary[3]) % (2 ** 32)
 	t = [A, B, C, D]
+	print('{:04x}'.format(A))
+	print('{:04x}'.format(B))
+	print('{:04x}'.format(C))
+	print('{:04x}'.format(D))
 	return "".join(map(lambda x: '{:04x}'.format(x),t))
 	
 
@@ -72,8 +77,18 @@ def PaddTo512(buffer):
 	buffer += lengthInBits
 	return buffer
 
-def PerformRound(f, a, b, c, d, k, shift, i,block, constants):
-	return b + ((a + f(b, c, d) + block & (1 << k) + constants[i-1]) << shift)
+def PerformRound(f, a, b, c, d, k, s, i,block, constants):
+	return b + shift((a + f(b, c, d) + block & shift(1 , k) + constants[i-1]), s)
+def shift(num, val):
+	result = num
+	for i in range(0,val):
+		oldest = num & (1<<31)
+		result = result <<1
+		if oldest != 0:
+			result |= 1
+	return result & 0b11111111111111111111111111111111
 
-
-print(Md5("kutaafagsdgsfghsdgherhdfhdfhdyhdrgsgged;lfngd;lbdljnsdihbndflgbnlkgjndlgsdfgdsbrilbnlifhnedfilflihjndjhdlskjhndkfljhndspienrpiohnilshs"))
+print(Md5("kupa"))
+m = hashlib.new("md5")
+m.update("kupa".encode('utf-8'))
+print(m.hexdigest())
